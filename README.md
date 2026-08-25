@@ -184,4 +184,4 @@ Per the assignment brief, the following were explicitly out of scope for this pr
 
 ## Live Demo
 
-Add your Vercel URL here after deploying.
+https://travel-unbounded-chi.vercel.app/
