@@ -1,0 +1,136 @@
+import type { Destination } from "@/types/destination";
+
+export const destinations: Destination[] = [
+  // ---- India ----
+  {
+    id: "kerala",
+    name: "Kerala",
+    country: "India",
+    category: "india",
+    mood: "Backwaters",
+    image: "/images/destinations/kerala.webp",
+    description:
+      "Drift past coconut groves on a converted rice barge, waking to fishermen casting nets on Vembanad Lake before breakfast is even served.",
+    price: 42000,
+    currency: "INR",
+    duration: "5 Nights / 6 Days",
+  },
+  {
+    id: "himachal-pradesh",
+    name: "Himachal Pradesh",
+    country: "India",
+    category: "india",
+    mood: "Alpine",
+    image: "/images/destinations/himachal-pradesh.webp",
+    description:
+      "Trade the highway for a mule track above Kasol, where deodar forests give way to ridgelines still holding snow in June.",
+    price: 35000,
+    currency: "INR",
+    duration: "6 Nights / 7 Days",
+  },
+  {
+    id: "ladakh",
+    name: "Ladakh",
+    country: "India",
+    category: "india",
+    mood: "Highland",
+    image: "/images/destinations/ladakh.webp",
+    description:
+      "Cross Khardung La at dawn when the light hits Pangong's water like hammered tin, then bunk in a village homestay powered by solar and yak-dung stoves.",
+    price: 58000,
+    currency: "INR",
+    duration: "7 Nights / 8 Days",
+  },
+  {
+    id: "andaman",
+    name: "Andaman Islands",
+    country: "India",
+    category: "india",
+    mood: "Coastal",
+    image: "/images/destinations/andaman.webp",
+    description:
+      "Snorkel the reef shelf off Havelock at slack tide, then eat grilled kingfish on a beach with no name on any map.",
+    price: 47000,
+    currency: "INR",
+    duration: "5 Nights / 6 Days",
+  },
+  {
+    id: "goa",
+    name: "Goa",
+    country: "India",
+    category: "india",
+    mood: "Laterite",
+    image: "/images/destinations/goa.webp",
+    description:
+      "Skip the strip and head inland to spice-farm homestays and Portuguese-era chapels, saving the beach for a sundowner at Agonda.",
+    price: 28000,
+    currency: "INR",
+    duration: "4 Nights / 5 Days",
+  },
+  // ---- International ----
+  {
+    id: "kenya",
+    name: "Kenya",
+    country: "Kenya",
+    category: "international",
+    mood: "Savanna",
+    image: "/images/destinations/kenya.webp",
+    description:
+      "Camp at the edge of the Mara during calving season, close enough to hear wildebeest hooves drum through the tent floor at first light.",
+    price: 185000,
+    currency: "INR",
+    duration: "6 Nights / 7 Days",
+  },
+  {
+    id: "vietnam",
+    name: "Vietnam",
+    country: "Vietnam",
+    category: "international",
+    mood: "Karst",
+    image: "/images/destinations/vietnam.webp",
+    description:
+      "Sleep on a wooden junk among Halong Bay's limestone pillars, then trade the coast for Hanoi's egg-coffee alleys and night-train sleeper berths.",
+    price: 98000,
+    currency: "INR",
+    duration: "7 Nights / 8 Days",
+  },
+  {
+    id: "tanzania",
+    name: "Tanzania",
+    country: "Tanzania",
+    category: "international",
+    mood: "Wild",
+    image: "/images/destinations/tanzania.webp",
+    description:
+      "Descend into the Ngorongoro Crater's private ecosystem at sunrise, then climb out to a Maasai village still measuring wealth in cattle, not shillings.",
+    price: 210000,
+    currency: "INR",
+    duration: "8 Nights / 9 Days",
+  },
+  {
+    id: "iceland",
+    name: "Iceland",
+    country: "Iceland",
+    category: "international",
+    mood: "Volcanic",
+    image: "/images/destinations/iceland.webp",
+    description:
+      "Chase the aurora along the Ring Road between black-sand beaches and geothermal rivers warm enough to swim in minus-degree air.",
+    price: 245000,
+    currency: "INR",
+    duration: "8 Nights / 9 Days",
+  },
+  {
+    id: "sri-lanka",
+    name: "Sri Lanka",
+    country: "Sri Lanka",
+    category: "international",
+    mood: "Tropic",
+    image: "/images/destinations/sri-lanka.webp",
+    description:
+      "Ride the blue train through Ella's tea terraces, then swap the hills for stilt fishermen and cinnamon-drying courtyards on the south coast.",
+    price: 76000,
+    currency: "INR",
+    duration: "6 Nights / 7 Days",
+  },
+];

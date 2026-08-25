@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1c2321;
+  --color-paper: #f7f4ec;
+  --color-canvas-deep: #12181b;
+  --color-terra: #c1552c;
+  --color-moss: #5b6e52;
+  --color-horizon: #2e5266;
+  --color-sand: #e4dcc8;
+
+  --font-display: var(--font-fraunces), serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-terra) 20%, transparent);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-terra);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
