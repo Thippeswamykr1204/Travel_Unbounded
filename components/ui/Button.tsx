@@ -1,7 +1,7 @@
 import { type ButtonHTMLAttributes, type AnchorHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "text-link";
+type ButtonVariant = "primary" | "text-link" | "primary-inverse";
 
 type ButtonAsButton = ButtonHTMLAttributes<HTMLButtonElement> & {
   as?: "button";
@@ -23,6 +23,8 @@ const variantStyles: Record<ButtonVariant, string> = {
     "rounded-full bg-terra px-6 py-3 text-sm font-medium text-paper hover:bg-terra/90 active:bg-terra/80",
   "text-link":
     "text-sm font-medium text-terra underline-offset-4 hover:underline",
+  "primary-inverse":
+    "rounded-full bg-paper px-6 py-3 text-sm font-medium text-ink hover:bg-paper/90 active:bg-paper/80",
 };
 
 export default function Button({

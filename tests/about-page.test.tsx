@@ -16,8 +16,8 @@ describe("About page", () => {
 
   it("renders all three office cities", () => {
     render(<About />);
-    expect(screen.getByText(/bengaluru/i)).toBeInTheDocument();
-    expect(screen.getByText(/kochi/i)).toBeInTheDocument();
-    expect(screen.getByText(/nairobi/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/bengaluru/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/kochi/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/nairobi/i).length).toBeGreaterThan(0);
   });
 });
