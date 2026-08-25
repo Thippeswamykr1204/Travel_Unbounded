@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Button from "@/components/ui/Button";
 
 type NavLink = {
@@ -81,80 +82,99 @@ export default function MobileMenu({
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  const prefersReducedMotion = useReducedMotion();
+  const panelInitial = prefersReducedMotion
+    ? { opacity: 0 }
+    : { x: 16, opacity: 0 };
+  const panelAnimate = prefersReducedMotion
+    ? { opacity: 1 }
+    : { x: 0, opacity: 1 };
+  const panelExit = panelInitial;
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Site menu"
-      className="fixed inset-0 z-[60] md:hidden"
-    >
-      <button
-        type="button"
-        aria-label="Close menu"
-        onClick={onClose}
-        className="absolute inset-0 h-full w-full bg-canvas-deep/60 backdrop-blur-sm"
-      />
-
-      <div
-        ref={panelRef}
-        className="animate-menu-in absolute inset-y-0 right-0 flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-paper px-6 pb-10 pt-6 text-ink shadow-xl"
-      >
-        <div className="flex items-center justify-between">
-          <span className="font-display text-sm font-semibold uppercase tracking-[0.2em]">
-            Travel Unbounded
-          </span>
-          <button
-            ref={closeButtonRef}
+    <AnimatePresence>
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
+          className="fixed inset-0 z-[60] md:hidden"
+        >
+          <motion.button
             type="button"
             aria-label="Close menu"
             onClick={onClose}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute inset-0 h-full w-full bg-canvas-deep/60 backdrop-blur-sm"
+          />
+
+          <motion.div
+            ref={panelRef}
+            initial={panelInitial}
+            animate={panelAnimate}
+            exit={panelExit}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute inset-y-0 right-0 flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-paper px-6 pb-10 pt-6 text-ink shadow-xl"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              aria-hidden="true"
+          <div className="flex items-center justify-between">
+            <span className="font-display text-sm font-semibold uppercase tracking-[0.2em]">
+              Travel Unbounded
+            </span>
+            <button
+              ref={closeButtonRef}
+              type="button"
+              aria-label="Close menu"
+              onClick={onClose}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full"
             >
-              <line x1="4" y1="4" x2="20" y2="20" />
-              <line x1="20" y1="4" x2="4" y2="20" />
-            </svg>
-          </button>
-        </div>
-
-        <nav className="mt-12 flex flex-1 flex-col gap-2">
-          {links.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={onClose}
-                className={cnActive(isActive)}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
               >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+                <line x1="4" y1="4" x2="20" y2="20" />
+                <line x1="20" y1="4" x2="4" y2="20" />
+              </svg>
+            </button>
+          </div>
 
-        <Button
-          as="a"
-          href="/contact"
-          variant="primary"
-          onClick={onClose}
-          className="mt-auto w-full justify-center py-4 text-base"
-        >
-          Plan Your Trip
-        </Button>
-      </div>
-    </div>
+          <nav className="mt-12 flex flex-1 flex-col gap-2">
+            {links.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={onClose}
+                  className={cnActive(isActive)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <Button
+            as="a"
+            href="/contact"
+            variant="primary"
+            onClick={onClose}
+            className="mt-auto w-full justify-center py-4 text-base"
+          >
+            Plan Your Trip
+          </Button>
+        </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }
 

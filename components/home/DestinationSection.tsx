@@ -1,5 +1,6 @@
 import Container from "@/components/ui/Container";
 import DestinationCard from "@/components/home/DestinationCard";
+import Reveal from "@/components/motion/Reveal";
 import type { Destination } from "@/types/destination";
 
 interface DestinationSectionProps {
@@ -25,8 +26,10 @@ export default function DestinationSection({
         </div>
 
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-          {destinations.map((destination) => (
-            <DestinationCard key={destination.id} destination={destination} />
+          {destinations.map((destination, index) => (
+            <Reveal key={destination.id} index={index % 5} staggerMs={90}>
+              <DestinationCard destination={destination} />
+            </Reveal>
           ))}
         </div>
       </Container>

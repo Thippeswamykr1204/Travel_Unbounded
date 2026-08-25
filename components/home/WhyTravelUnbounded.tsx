@@ -1,4 +1,5 @@
 import Container from "@/components/ui/Container";
+import Reveal from "@/components/motion/Reveal";
 
 interface Reason {
   label: string;
@@ -36,9 +37,11 @@ export default function WhyTravelUnbounded() {
 
         {/* Mobile: snap-scroll strip. Desktop: static row. */}
         <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0">
-          {reasons.map((reason) => (
-            <div
+          {reasons.map((reason, index) => (
+            <Reveal
               key={reason.label}
+              index={index}
+              staggerMs={90}
               className="flex w-[78%] flex-none snap-start flex-col gap-3 rounded-md bg-paper p-6 sm:w-[55%] lg:w-auto"
             >
               <span className="font-mono text-xs uppercase tracking-[0.16em] text-terra">
@@ -47,7 +50,7 @@ export default function WhyTravelUnbounded() {
               <p className="font-sans text-base leading-relaxed text-ink/80">
                 {reason.body}
               </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </Container>

@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
 import Container from "@/components/ui/Container";
 
 interface Reason {
@@ -25,6 +28,8 @@ const reasons: Reason[] = [
 ];
 
 export default function AboutWhyChoose() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="py-14 sm:py-20">
       <Container>
@@ -40,19 +45,41 @@ export default function AboutWhyChoose() {
           </div>
 
           <ul className="space-y-8">
-            {reasons.map((reason) => (
-              <li
-                key={reason.label}
-                className="border-l-2 border-terra pl-5 sm:pl-6"
-              >
-                <span className="font-mono text-xs uppercase tracking-[0.16em] text-terra">
-                  {reason.label}
-                </span>
-                <p className="mt-2 font-sans text-base leading-relaxed text-ink/80">
-                  {reason.body}
-                </p>
-              </li>
-            ))}
+            {reasons.map((reason, index) =>
+              prefersReducedMotion ? (
+                <li
+                  key={reason.label}
+                  className="border-l-2 border-terra pl-5 sm:pl-6"
+                >
+                  <span className="font-mono text-xs uppercase tracking-[0.16em] text-terra">
+                    {reason.label}
+                  </span>
+                  <p className="mt-2 font-sans text-base leading-relaxed text-ink/80">
+                    {reason.body}
+                  </p>
+                </li>
+              ) : (
+                <motion.li
+                  key={reason.label}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.5,
+                    ease: "easeOut",
+                    delay: (index * 90) / 1000,
+                  }}
+                  className="border-l-2 border-terra pl-5 sm:pl-6"
+                >
+                  <span className="font-mono text-xs uppercase tracking-[0.16em] text-terra">
+                    {reason.label}
+                  </span>
+                  <p className="mt-2 font-sans text-base leading-relaxed text-ink/80">
+                    {reason.body}
+                  </p>
+                </motion.li>
+              ),
+            )}
           </ul>
         </div>
       </Container>

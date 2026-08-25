@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Navbar from "@/components/layout/Navbar";
 
 vi.mock("next/navigation", () => ({
@@ -25,7 +25,7 @@ describe("Navbar", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  it("closes the mobile menu when the close button is clicked", () => {
+  it("closes the mobile menu when the close button is clicked", async () => {
     render(<Navbar />);
     fireEvent.click(screen.getByRole("button", { name: /open menu/i }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -34,15 +34,21 @@ describe("Navbar", () => {
       name: /close menu/i,
     });
     fireEvent.click(closeButtons[closeButtons.length - 1]);
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    // The panel now plays a Motion exit transition before unmounting, so
+    // wait for it to finish clearing the DOM instead of asserting instantly.
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
   });
 
-  it("closes the mobile menu when Escape is pressed", () => {
+  it("closes the mobile menu when Escape is pressed", async () => {
     render(<Navbar />);
     fireEvent.click(screen.getByRole("button", { name: /open menu/i }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
   });
 });
