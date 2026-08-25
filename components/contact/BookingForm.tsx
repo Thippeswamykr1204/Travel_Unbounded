@@ -32,6 +32,7 @@ export default function BookingForm({ destination }: BookingFormProps) {
     register,
     handleSubmit,
     reset,
+    setError: setFieldError,
     formState: { errors },
   } = useForm<EnquiryFormValues>({
     resolver: zodResolver(enquirySchema),
@@ -48,13 +49,45 @@ export default function BookingForm({ destination }: BookingFormProps) {
     },
   });
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: EnquiryFormValues) => {
     setSubmitting(true);
     setError(null);
-    // Tier 7 will replace this with the real API call.
-    await new Promise((resolve) => setTimeout(resolve, 900));
-    setSubmitting(false);
-    setSubmitted(true);
+
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json().catch(() => null);
+
+      if (response.ok) {
+        setSubmitted(true);
+        return;
+      }
+
+      if (response.status === 400 && result?.fieldErrors) {
+        const fieldErrors = result.fieldErrors as Record<string, string[]>;
+        for (const [field, messages] of Object.entries(fieldErrors)) {
+          if (messages?.length) {
+            setFieldError(field as keyof EnquiryFormValues, {
+              type: "server",
+              message: messages[0],
+            });
+          }
+        }
+        return;
+      }
+
+      setError(
+        result?.message ?? "Something went wrong. Please try again.",
+      );
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleReset = () => {

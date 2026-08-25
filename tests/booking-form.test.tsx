@@ -1,9 +1,28 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import BookingForm from "@/components/contact/BookingForm";
 
 describe("BookingForm", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        status: 201,
+        json: async () => ({
+          success: true,
+          id: "mock-id",
+          message: "Enquiry submitted successfully",
+        }),
+      })),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("renders without crashing", () => {
     render(<BookingForm />);
     expect(
