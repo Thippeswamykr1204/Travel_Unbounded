@@ -17,7 +17,7 @@ export default async function Contact({ searchParams }: ContactPageProps) {
 
   return (
     <main>
-      <section className="bg-canvas-deep pt-32 pb-14 sm:pt-40 sm:pb-20">
+      <section className="bg-canvas-deep pt-10 pb-10 sm:pt-14 sm:pb-14">
         <Container>
           <h1 className="font-display text-4xl text-paper sm:text-5xl">
             Plan Your Trip

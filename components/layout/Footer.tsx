@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
-import Button from "@/components/ui/Button";
 import { OFFICES } from "@/data/offices";
 
 const EXPLORE_LINKS = [
@@ -14,8 +13,8 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-sand bg-sand/40">
-      <Container className="py-14 sm:py-16">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="pt-14 pb-6 sm:pt-16 sm:pb-8">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
           <div className="lg:col-span-1">
             <span className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-ink">
               Travel Unbounded
@@ -57,21 +56,9 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
-          <div className="flex flex-col items-start gap-4 sm:col-span-2 lg:col-span-1">
-            <h3 className="font-display text-sm font-semibold uppercase tracking-wide text-horizon">
-              Ready when you are
-            </h3>
-            <p className="text-sm text-ink/70">
-              Tell us where you want to go — we&apos;ll handle the rest.
-            </p>
-            <Button as="a" href="/contact" variant="primary">
-              Plan Your Trip
-            </Button>
-          </div>
         </div>
 
-        <div className="mt-12 border-t border-moss/20 pt-6">
+        <div className="mt-8 border-t border-moss/20 pt-4">
           <p className="text-xs text-ink/70">
             &copy; {year} Travel Unbounded. All rights reserved.
           </p>

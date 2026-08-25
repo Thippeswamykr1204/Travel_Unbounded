@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Container from "@/components/ui/Container";
@@ -13,32 +13,17 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-const SCROLL_THRESHOLD = 40;
-
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const closeMenu = useCallback(() => setMenuOpen(false), []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > SCROLL_THRESHOLD);
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <>
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-          scrolled
-            ? "bg-paper/95 text-ink backdrop-blur shadow-sm"
-            : "bg-transparent text-paper",
+          "bg-paper/95 text-ink backdrop-blur shadow-sm",
         )}
       >
         <Container className="flex h-16 items-center justify-between sm:h-20">
@@ -58,9 +43,7 @@ export default function Navbar() {
                   href={link.href}
                   className={cn(
                     "text-sm font-medium underline-offset-4 transition-colors",
-                    isActive
-                      ? cn("underline", scrolled ? "text-terra" : "text-paper")
-                      : "hover:underline",
+                    isActive ? "underline text-terra" : "hover:underline",
                   )}
                 >
                   {link.label}

@@ -8,8 +8,8 @@ export default function StorySection() {
         <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
           <div className="relative h-64 w-full overflow-hidden rounded-md sm:h-80 lg:h-[26rem] lg:w-1/2 lg:flex-none">
             <Image
-              src="/images/destinations/ladakh.webp"
-              alt="A quiet mountain road winding through Ladakh's high desert"
+              src="/images/destinations/ladakh-road.png"
+              alt="A 4x4 winding along a mountain road through Ladakh's high desert, snow peaks ahead"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"

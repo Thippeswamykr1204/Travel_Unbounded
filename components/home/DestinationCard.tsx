@@ -61,7 +61,7 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
       {/* Content */}
       <div className="flex flex-1 flex-col gap-2 px-1 pb-1 pt-4">
         <h3 className="font-display text-xl text-ink">{name}</h3>
-        <p className="text-sm leading-relaxed text-ink/75">{description}</p>
+        <p className="line-clamp-3 text-sm leading-relaxed text-ink/75">{description}</p>
 
         <div className="mt-1 flex items-baseline justify-between">
           <span className="text-sm font-medium text-ink">{formattedPrice}</span>
@@ -72,7 +72,7 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
           href={`/contact?destination=${destination.id}`}
           className={cn(
             "inline-flex items-center gap-2 font-sans transition-colors duration-200",
-            "mt-2 gap-1.5 self-start text-sm font-medium text-terra underline-offset-4 hover:underline",
+            "mt-auto gap-1.5 self-start pt-2 text-sm font-medium text-terra underline-offset-4 hover:underline",
           )}
         >
           Explore destination

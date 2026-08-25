@@ -65,15 +65,15 @@ export default function Hero() {
       </div>
 
       {/* Photo column */}
-      <div className="relative order-1 h-[50vh] w-full overflow-hidden lg:order-2 lg:h-auto lg:w-[55%] lg:flex-none">
+      <div className="relative order-1 h-[45vh] w-full p-10 sm:p-16 lg:order-2 lg:h-auto lg:w-[55%] lg:flex-none">
         <div
-          className={`h-full w-full transition-transform duration-700 ease-out motion-reduce:transition-none ${
+          className={`h-full w-full overflow-hidden rounded-2xl transition-transform duration-700 ease-out motion-reduce:transition-none ${
             mounted ? "scale-100" : "scale-[1.03]"
           }`}
         >
           <Image
-            src="/images/destinations/kenya.webp"
-            alt="Golden savanna grass at dusk in the Maasai Mara, Kenya"
+            src="/images/destinations/hero-santorini.png"
+            alt="Traveller looking out over the white-washed cliffside town of Santorini, Greece"
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 55vw"

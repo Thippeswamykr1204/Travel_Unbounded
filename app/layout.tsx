@@ -41,7 +41,7 @@ export default function RootLayout({
     >
       <body className="bg-paper text-ink font-sans antialiased">
         <Navbar />
-        {children}
+        <main className="pt-16 sm:pt-20">{children}</main>
         <Footer />
       </body>
     </html>
