@@ -19,4 +19,15 @@ describe("Home page", () => {
       screen.getByRole("heading", { level: 3, name: /kerala/i }),
     ).toBeInTheDocument();
   });
+
+  it("links a destination card's explore link to the contact form with its destination id", () => {
+    render(<Home />);
+    const exploreLink = screen.getAllByRole("link", {
+      name: /explore destination/i,
+    })[0];
+    expect(exploreLink).toHaveAttribute(
+      "href",
+      expect.stringContaining("?destination="),
+    );
+  });
 });

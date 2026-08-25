@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Button from "@/components/ui/Button";
+import Link from "next/link";
 import type { Destination } from "@/types/destination";
 import { cn } from "@/lib/utils";
 
@@ -68,17 +68,18 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
           <span className="font-mono text-xs text-ink/70">{duration}</span>
         </div>
 
-        <Button
-          as="a"
-          href="#"
-          variant="text-link"
-          className="mt-2 inline-flex items-center gap-1.5 self-start"
+        <Link
+          href={`/contact?destination=${destination.id}`}
+          className={cn(
+            "inline-flex items-center gap-2 font-sans transition-colors duration-200",
+            "mt-2 gap-1.5 self-start text-sm font-medium text-terra underline-offset-4 hover:underline",
+          )}
         >
           Explore destination
           <span className="inline-block transition-transform duration-200 ease-out group-hover:translate-x-1">
             →
           </span>
-        </Button>
+        </Link>
       </div>
     </article>
   );
