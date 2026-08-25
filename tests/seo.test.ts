@@ -14,10 +14,11 @@ describe("sitemap.ts", () => {
   it("lists the home, about, and contact routes", () => {
     const result = sitemap();
     const urls = result.map((entry) => entry.url);
+    const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    expect(urls).toContain("https://www.travelunbounded.com");
-    expect(urls).toContain("https://www.travelunbounded.com/about");
-    expect(urls).toContain("https://www.travelunbounded.com/contact");
+    expect(urls).toContain(base);
+    expect(urls).toContain(`${base}/about`);
+    expect(urls).toContain(`${base}/contact`);
     expect(result).toHaveLength(3);
   });
 
