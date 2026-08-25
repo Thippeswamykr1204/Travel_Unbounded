@@ -1,29 +1,12 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import { OFFICES } from "@/data/offices";
 
 const EXPLORE_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
-];
-
-// NOTE: no office addresses were supplied in the project brief/data files
-// available for this tier. These are clearly-marked placeholders — swap in
-// the real street addresses before shipping.
-const OFFICES = [
-  {
-    city: "Bengaluru HQ",
-    address: "[Address not provided — placeholder, Bengaluru, Karnataka]",
-  },
-  {
-    city: "Kochi",
-    address: "[Address not provided — placeholder, Kochi, Kerala]",
-  },
-  {
-    city: "Nairobi",
-    address: "[Address not provided — placeholder, Nairobi, Kenya]",
-  },
 ];
 
 export default function Footer() {
