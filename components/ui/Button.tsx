@@ -16,7 +16,7 @@ type ButtonAsAnchor = AnchorHTMLAttributes<HTMLAnchorElement> & {
 type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 
 const baseStyles =
-  "inline-flex items-center gap-2 font-sans transition-colors duration-200 focus-visible:outline-none";
+  "inline-flex items-center gap-2 font-sans transition-colors duration-200";
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:

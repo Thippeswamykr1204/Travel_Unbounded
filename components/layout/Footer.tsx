@@ -72,7 +72,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t border-moss/20 pt-6">
-          <p className="text-xs text-ink/60">
+          <p className="text-xs text-ink/70">
             &copy; {year} Travel Unbounded. All rights reserved.
           </p>
         </div>

@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 const fieldStyles =
-  "w-full rounded-md border border-ink/15 bg-paper px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-terra focus:outline-none";
+  "w-full rounded-md border border-ink/15 bg-paper px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-terra";
 
 const labelStyles = "font-sans text-sm font-medium text-ink";
 
@@ -126,7 +126,7 @@ export default function BookingForm({ destination }: BookingFormProps) {
             type="button"
             onClick={() => setError(null)}
             aria-label="Dismiss error"
-            className="text-ink/60 hover:text-ink"
+            className="text-ink/70 hover:text-ink"
           >
             ×
           </button>

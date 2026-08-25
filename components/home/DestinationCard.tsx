@@ -65,7 +65,7 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
 
         <div className="mt-1 flex items-baseline justify-between">
           <span className="text-sm font-medium text-ink">{formattedPrice}</span>
-          <span className="font-mono text-xs text-ink/50">{duration}</span>
+          <span className="font-mono text-xs text-ink/70">{duration}</span>
         </div>
 
         <Button

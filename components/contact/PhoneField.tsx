@@ -12,7 +12,7 @@ const COUNTRY_CODES = [
 ];
 
 const fieldStyles =
-  "w-full rounded-md border border-ink/15 bg-paper px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-terra focus:outline-none";
+  "w-full rounded-md border border-ink/15 bg-paper px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-terra";
 
 type PhoneFieldProps = {
   register: UseFormRegister<EnquiryFormValues>;
