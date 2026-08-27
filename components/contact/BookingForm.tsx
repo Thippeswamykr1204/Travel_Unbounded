@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 const fieldStyles =
-  "w-full rounded-md border border-ink/15 bg-paper px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-terra";
+  "w-full appearance-none rounded-md border border-ink/15 bg-paper px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 outline-none focus-visible:outline-none focus:border-2 focus:border-terra focus:px-[15px] focus:py-[11px] hover:border-ink/15";
 
 const labelStyles = "font-sans text-sm font-medium text-ink";
 
@@ -30,6 +30,7 @@ export default function BookingForm({ destination }: BookingFormProps) {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     setError: setFieldError,
@@ -162,7 +163,7 @@ export default function BookingForm({ destination }: BookingFormProps) {
           )}
         </div>
 
-        <PhoneField register={register} errors={errors} />
+        <PhoneField register={register} control={control} errors={errors} />
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="email" className={labelStyles}>
@@ -242,10 +243,11 @@ export default function BookingForm({ destination }: BookingFormProps) {
           <label htmlFor="hotelCategory" className={labelStyles}>
             Hotel Category
           </label>
+          <div className="relative">
           <select
             id="hotelCategory"
             defaultValue=""
-            className={fieldStyles}
+            className={cn(fieldStyles, "pr-10")}
             {...register("hotelCategory")}
           >
             <option value="" disabled>
@@ -255,6 +257,14 @@ export default function BookingForm({ destination }: BookingFormProps) {
             <option value="Deluxe">Deluxe</option>
             <option value="Luxury">Luxury</option>
           </select>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/50"
+          >
+            <path fill="currentColor" d="M5.25 7.5 10 12.25 14.75 7.5H5.25Z" />
+          </svg>
+          </div>
           {errors.hotelCategory && (
             <p className="font-sans text-xs text-terra">
               {errors.hotelCategory.message}

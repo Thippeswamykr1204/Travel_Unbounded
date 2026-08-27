@@ -23,8 +23,10 @@ html {
   color: var(--color-ink);
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-terra);
-  outline-offset: 2px;
-  border-radius: 2px;
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-terra);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 }
