@@ -43,7 +43,13 @@ export const COUNTRY_CODES: CountryCode[] = [
  * Flag icon URL (flagcdn.com) for an ISO 3166-1 alpha-2 code, e.g. "IN".
  * Used instead of flag emoji so flags render identically across OS/browsers
  * (emoji flags are inconsistent on Windows and some Android builds).
+ *
+ * flagcdn.com's width-based PNG endpoint only serves fixed sizes:
+ * 20, 40, 80, 160, 320, 640, 1280, 2560 — anything else 404s.
  */
-export function countryFlagUrl(iso2: string, width: 20 | 24 | 40 = 24): string {
+export function countryFlagUrl(
+  iso2: string,
+  width: 20 | 40 | 80 | 160 = 40,
+): string {
   return `https://flagcdn.com/w${width}/${iso2.toLowerCase()}.png`;
 }
