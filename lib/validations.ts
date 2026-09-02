@@ -40,3 +40,21 @@ export const updateEnquiryStatusSchema = z.object({
 });
 
 export type UpdateEnquiryStatusValues = z.infer<typeof updateEnquiryStatusSchema>;
+
+export const destinationInputSchema = z.object({
+  name: z.string().trim().min(2, "Enter a name").max(100),
+  country: z.string().trim().min(2, "Enter a country").max(100),
+  category: z.enum(["india", "international"]),
+  mood: z.string().trim().min(2, "Enter a mood").max(50),
+  image: z.string().trim().url("Enter a valid image URL"),
+  description: z.string().trim().min(10, "Enter a description"),
+  price: z.coerce.number().positive("Price must be positive"),
+  duration: z.string().trim().min(2, "Enter a duration"),
+  active: z.coerce.boolean().optional().default(true),
+});
+
+export type DestinationInputValues = z.infer<typeof destinationInputSchema>;
+
+export const destinationUpdateSchema = destinationInputSchema.partial();
+
+export type DestinationUpdateValues = z.infer<typeof destinationUpdateSchema>;

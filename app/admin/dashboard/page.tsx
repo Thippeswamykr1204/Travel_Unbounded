@@ -2,14 +2,17 @@ import Link from "next/link";
 import AdminShell from "@/components/admin/AdminShell";
 import { connectDB } from "@/lib/mongodb";
 import { getEnquiryModel } from "@/models/Enquiry";
+import { getDestinationModel } from "@/models/Destination";
 
 export default async function AdminDashboardPage() {
   await connectDB();
   const Enquiry = getEnquiryModel();
+  const Destination = getDestinationModel();
 
-  const [total, newCount] = await Promise.all([
+  const [total, newCount, activeDestinations] = await Promise.all([
     Enquiry.countDocuments({}),
     Enquiry.countDocuments({ status: "new" }),
+    Destination.countDocuments({ active: true }),
   ]);
 
   return (
@@ -19,7 +22,7 @@ export default async function AdminDashboardPage() {
         A quick snapshot of enquiries coming in.
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-lg border border-ink/10 bg-paper p-6 shadow-sm">
           <p className="font-sans text-sm text-ink/60">Total Enquiries</p>
           <p className="mt-2 font-display text-4xl text-ink">{total}</p>
@@ -27,6 +30,10 @@ export default async function AdminDashboardPage() {
         <div className="rounded-lg border border-ink/10 bg-paper p-6 shadow-sm">
           <p className="font-sans text-sm text-ink/60">New Enquiries</p>
           <p className="mt-2 font-display text-4xl text-terra">{newCount}</p>
+        </div>
+        <div className="rounded-lg border border-ink/10 bg-paper p-6 shadow-sm">
+          <p className="font-sans text-sm text-ink/60">Active Destinations</p>
+          <p className="mt-2 font-display text-4xl text-moss">{activeDestinations}</p>
         </div>
       </div>
 
