@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/mongodb";
 import { getDestinationModel, type DestinationDocument } from "@/models/Destination";
 import { destinationInputSchema } from "@/lib/validations";
 import type { DestinationDTO } from "@/types/destination";
+import { JWT_COOKIE_NAME, verifyAdminToken } from "@/lib/auth";
+import { recordAuditLog } from "@/lib/auditLog";
 
 function toDTO(doc: DestinationDocument & { _id: unknown }): DestinationDTO {
   return {
@@ -101,6 +103,18 @@ export async function POST(request: NextRequest) {
       slug,
       currency: "INR",
     });
+
+    const accessToken = request.cookies.get(JWT_COOKIE_NAME)?.value;
+    const payload = accessToken ? verifyAdminToken(accessToken) : null;
+    if (payload) {
+      await recordAuditLog({
+        adminId: payload.adminId,
+        adminEmail: payload.email,
+        action: "destination.created",
+        targetId: String(created._id),
+        summary: `Created destination "${created.name}"`,
+      });
+    }
 
     return NextResponse.json(
       { success: true, data: toDTO(created) },

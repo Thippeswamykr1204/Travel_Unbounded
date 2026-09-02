@@ -5,6 +5,10 @@ export interface AdminUserDocument extends Document {
   passwordHash: string;
   name: string;
   role: "admin";
+  failedLoginAttempts: number;
+  lockedUntil?: Date | null;
+  refreshTokenHash?: string | null;
+  refreshTokenExpiresAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,6 +29,10 @@ export const adminUserSchema = new Schema<AdminUserDocument>(
       enum: ["admin"],
       default: "admin",
     },
+    failedLoginAttempts: { type: Number, default: 0 },
+    lockedUntil: { type: Date, default: null },
+    refreshTokenHash: { type: String, default: null },
+    refreshTokenExpiresAt: { type: Date, default: null },
   },
   { timestamps: true },
 );

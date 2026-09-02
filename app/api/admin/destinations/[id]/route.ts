@@ -4,6 +4,8 @@ import { connectDB } from "@/lib/mongodb";
 import { getDestinationModel, type DestinationDocument } from "@/models/Destination";
 import { destinationUpdateSchema } from "@/lib/validations";
 import type { DestinationDTO } from "@/types/destination";
+import { JWT_COOKIE_NAME, verifyAdminToken } from "@/lib/auth";
+import { recordAuditLog } from "@/lib/auditLog";
 
 function toDTO(doc: DestinationDocument & { _id: unknown }): DestinationDTO {
   return {
@@ -49,7 +51,6 @@ export async function PATCH(
       );
     }
 
-    // Never trust a client-supplied slug.
     if (body && typeof body === "object" && "slug" in body) {
       delete (body as Record<string, unknown>).slug;
     }
@@ -82,9 +83,25 @@ export async function PATCH(
       );
     }
 
+    const destinationDoc = updated as unknown as DestinationDocument & {
+      _id: unknown;
+    };
+
+    const accessToken = request.cookies.get(JWT_COOKIE_NAME)?.value;
+    const payload = accessToken ? verifyAdminToken(accessToken) : null;
+    if (payload) {
+      await recordAuditLog({
+        adminId: payload.adminId,
+        adminEmail: payload.email,
+        action: "destination.updated",
+        targetId: id,
+        summary: `Updated destination "${destinationDoc.name}"`,
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      data: toDTO(updated as unknown as DestinationDocument & { _id: unknown }),
+      data: toDTO(destinationDoc),
     });
   } catch {
     return NextResponse.json(
@@ -95,7 +112,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
@@ -118,6 +135,22 @@ export async function DELETE(
         { success: false, message: "Destination not found." },
         { status: 404 },
       );
+    }
+
+    const deletedDoc = deleted as unknown as DestinationDocument & {
+      _id: unknown;
+    };
+
+    const accessToken = request.cookies.get(JWT_COOKIE_NAME)?.value;
+    const payload = accessToken ? verifyAdminToken(accessToken) : null;
+    if (payload) {
+      await recordAuditLog({
+        adminId: payload.adminId,
+        adminEmail: payload.email,
+        action: "destination.deleted",
+        targetId: id,
+        summary: `Deleted destination "${deletedDoc.name}"`,
+      });
     }
 
     return NextResponse.json({ success: true });

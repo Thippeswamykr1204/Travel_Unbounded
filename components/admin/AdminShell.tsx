@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import LogoutButton from "@/components/admin/LogoutButton";
+import SessionRefresher from "@/components/admin/SessionRefresher";
 import { cn } from "@/lib/utils";
 
 type AdminShellProps = {
@@ -18,6 +19,7 @@ const NAV_ITEMS = [
 export default function AdminShell({ children, activeNav }: AdminShellProps) {
   return (
     <div className="min-h-screen bg-paper">
+      <SessionRefresher />
       {/* Top bar (mobile: full nav; desktop: wordmark + logout only) */}
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/95 backdrop-blur">
         <Container className="flex h-16 items-center justify-between">

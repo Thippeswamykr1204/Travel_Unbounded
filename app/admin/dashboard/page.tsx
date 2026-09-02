@@ -3,6 +3,7 @@ import AdminShell from "@/components/admin/AdminShell";
 import { connectDB } from "@/lib/mongodb";
 import { getEnquiryModel } from "@/models/Enquiry";
 import { getDestinationModel } from "@/models/Destination";
+import { getAdminAuditLogModel } from "@/models/AdminAuditLog";
 import { getAnalyticsSummary } from "@/lib/analytics";
 import MonthlyVolumeChart from "@/components/admin/analytics/MonthlyVolumeChart";
 import StatusBreakdownChart from "@/components/admin/analytics/StatusBreakdownChart";
@@ -12,13 +13,16 @@ export default async function AdminDashboardPage() {
   await connectDB();
   const Enquiry = getEnquiryModel();
   const Destination = getDestinationModel();
+  const AdminAuditLog = getAdminAuditLogModel();
 
-  const [total, newCount, activeDestinations, analytics] = await Promise.all([
-    Enquiry.countDocuments({}),
-    Enquiry.countDocuments({ status: "new" }),
-    Destination.countDocuments({ active: true }),
-    getAnalyticsSummary(6),
-  ]);
+  const [total, newCount, activeDestinations, analytics, recentActivity] =
+    await Promise.all([
+      Enquiry.countDocuments({}),
+      Enquiry.countDocuments({ status: "new" }),
+      Destination.countDocuments({ active: true }),
+      getAnalyticsSummary(6),
+      AdminAuditLog.find({}).sort({ createdAt: -1 }).limit(10).lean(),
+    ]);
 
   return (
     <AdminShell activeNav="dashboard">
@@ -68,6 +72,32 @@ export default async function AdminDashboardPage() {
           <div className="mt-4">
             <TopDestinationsChart data={analytics.topDestinations} />
           </div>
+        </div>
+      </div>
+
+      <div className="mt-8 rounded-lg border border-ink/10 bg-paper p-6 shadow-sm">
+        <p className="font-sans text-sm font-medium text-ink/70">Recent Admin Activity</p>
+        <div className="mt-4">
+          {recentActivity.length === 0 ? (
+            <p className="font-sans text-sm text-ink/50">No activity yet.</p>
+          ) : (
+            <ul className="divide-y divide-ink/10">
+              {recentActivity.map((entry) => (
+                <li
+                  key={String(entry._id)}
+                  className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="font-sans text-sm text-ink">{entry.summary}</p>
+                    <p className="font-sans text-xs text-ink/50">{entry.adminEmail}</p>
+                  </div>
+                  <p className="font-sans text-xs text-ink/50">
+                    {new Date(entry.createdAt).toLocaleString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 

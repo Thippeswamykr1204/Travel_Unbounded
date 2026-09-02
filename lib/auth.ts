@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
 export const JWT_COOKIE_NAME = "tu_admin_session";
+export const REFRESH_COOKIE_NAME = "tu_admin_refresh";
+
+// 7 days, in ms — exported for reuse when setting cookie maxAge / DB expiry.
+export const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type AdminTokenPayload = {
   adminId: string;
@@ -12,7 +16,9 @@ export function signAdminToken(payload: AdminTokenPayload): string {
   if (!secret) {
     throw new Error("JWT_SECRET is not set");
   }
-  return jwt.sign(payload, secret, { expiresIn: "8h" });
+  // Short-lived access token — refresh-token rotation (see lib/refreshToken.ts
+  // and app/api/auth/refresh) keeps the session alive without a long-lived JWT.
+  return jwt.sign(payload, secret, { expiresIn: "15m" });
 }
 
 export function verifyAdminToken(token: string): AdminTokenPayload | null {

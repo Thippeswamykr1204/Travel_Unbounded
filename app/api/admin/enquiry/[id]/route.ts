@@ -4,6 +4,8 @@ import { connectDB } from "@/lib/mongodb";
 import { getEnquiryModel, type EnquiryDocument } from "@/models/Enquiry";
 import { updateEnquiryStatusSchema } from "@/lib/validations";
 import type { EnquiryDTO } from "@/types/enquiry";
+import { JWT_COOKIE_NAME, verifyAdminToken } from "@/lib/auth";
+import { recordAuditLog } from "@/lib/auditLog";
 
 function toDTO(doc: EnquiryDocument & { _id: unknown }): EnquiryDTO {
   return {
@@ -75,10 +77,24 @@ export async function PATCH(
       );
     }
 
-    return NextResponse.json({
+    const responseData = {
       success: true,
       data: toDTO(updated as unknown as EnquiryDocument & { _id: unknown }),
-    });
+    };
+
+    const accessToken = request.cookies.get(JWT_COOKIE_NAME)?.value;
+    const payload = accessToken ? verifyAdminToken(accessToken) : null;
+    if (payload) {
+      await recordAuditLog({
+        adminId: payload.adminId,
+        adminEmail: payload.email,
+        action: "enquiry.status_updated",
+        targetId: id,
+        summary: `Updated status to "${parsed.data.status}"`,
+      });
+    }
+
+    return NextResponse.json(responseData);
   } catch {
     return NextResponse.json(
       { success: false, message: "Something went wrong. Please try again." },
