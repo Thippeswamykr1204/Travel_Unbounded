@@ -58,3 +58,9 @@ export type DestinationInputValues = z.infer<typeof destinationInputSchema>;
 export const destinationUpdateSchema = destinationInputSchema.partial();
 
 export type DestinationUpdateValues = z.infer<typeof destinationUpdateSchema>;
+
+export const analyticsQuerySchema = z.object({
+  months: z.coerce.number().int().min(1).max(24).default(6),
+});
+
+export type AnalyticsQuery = z.infer<typeof analyticsQuerySchema>;
