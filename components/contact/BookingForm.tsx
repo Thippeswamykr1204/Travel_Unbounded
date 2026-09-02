@@ -21,9 +21,10 @@ function tomorrowISODate() {
 
 type BookingFormProps = {
   destination?: string;
+  numberOfPeople?: number;
 };
 
-export default function BookingForm({ destination }: BookingFormProps) {
+export default function BookingForm({ destination, numberOfPeople }: BookingFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +43,7 @@ export default function BookingForm({ destination }: BookingFormProps) {
       countryCode: "",
       contactNumber: "",
       email: "",
-      numberOfPeople: 1,
+      numberOfPeople: numberOfPeople ?? 1,
       numberOfChildren: 0,
       hotelCategory: undefined,
       destination: destination ?? "",

@@ -77,11 +77,19 @@ export async function POST(request: NextRequest) {
   const history = messages.slice(0, -1);
   const latest = messages[messages.length - 1]!;
 
+  // Gemini's chat history must start with a "user" turn. The client seeds the
+  // conversation with a synthetic assistant greeting (so the UI has something
+  // to show before the visitor types anything) — strip any leading assistant
+  // messages here so the seed greeting never becomes an invalid leading
+  // "model" turn, regardless of what the client sends.
+  const firstUserIndex = history.findIndex((message) => message.role === "user");
+  const geminiHistory = firstUserIndex === -1 ? [] : history.slice(firstUserIndex);
+
   let rawText: string;
   try {
     const model = getGeminiModel();
     const chat = model.startChat({
-      history: history.map((message) => ({
+      history: geminiHistory.map((message) => ({
         role: toGeminiRole(message.role),
         parts: [{ text: message.content }],
       })),
