@@ -23,3 +23,20 @@ export const loginSchema = z.object({
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
+
+const ENQUIRY_STATUS_VALUES = ["new", "contacted", "converted", "closed"] as const;
+
+export const adminEnquiryQuerySchema = z.object({
+  q: z.string().trim().max(200).optional(),
+  status: z.enum(ENQUIRY_STATUS_VALUES).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
+
+export type AdminEnquiryQuery = z.infer<typeof adminEnquiryQuerySchema>;
+
+export const updateEnquiryStatusSchema = z.object({
+  status: z.enum(ENQUIRY_STATUS_VALUES),
+});
+
+export type UpdateEnquiryStatusValues = z.infer<typeof updateEnquiryStatusSchema>;
