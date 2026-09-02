@@ -16,3 +16,10 @@ export const enquirySchema = z.object({
 });
 
 export type EnquiryFormValues = z.infer<typeof enquirySchema>;
+
+export const loginSchema = z.object({
+  email: z.string().trim().toLowerCase().email("Enter a valid email"),
+  password: z.string().min(1, "Enter your password"),
+});
+
+export type LoginFormValues = z.infer<typeof loginSchema>;
