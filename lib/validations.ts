@@ -64,3 +64,43 @@ export const analyticsQuerySchema = z.object({
 });
 
 export type AnalyticsQuery = z.infer<typeof analyticsQuerySchema>;
+
+// --- Chat (Tier 5) ---
+
+const CHAT_ROLE_VALUES = ["user", "assistant"] as const;
+
+export const chatRequestSchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(CHAT_ROLE_VALUES),
+        content: z.string().min(1).max(2000),
+      }),
+    )
+    .min(1)
+    .max(40),
+});
+
+export type ChatRequestValues = z.infer<typeof chatRequestSchema>;
+
+export const itineraryActivitySchema = z.object({
+  time: z.string().optional(),
+  title: z.string().trim().min(1, "Activity title is required"),
+  description: z.string().optional(),
+});
+
+export const itineraryDaySchema = z.object({
+  day: z.number().int().positive(),
+  title: z.string().trim().min(1, "Day title is required"),
+  activities: z.array(itineraryActivitySchema),
+});
+
+export const itinerarySchema = z.object({
+  title: z.string().trim().min(1, "Itinerary title is required"),
+  destination: z.string().trim().min(1, "Destination is required"),
+  duration: z.number().int().positive().max(30),
+  estimatedBudget: z.number().positive().optional(),
+  days: z.array(itineraryDaySchema).min(1).max(30),
+});
+
+export type ItineraryValues = z.infer<typeof itinerarySchema>;
