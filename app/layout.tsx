@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ChatWidget from "@/components/chat/ChatWidget";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -43,6 +44,7 @@ export default function RootLayout({
         <Navbar />
         <main className="pt-16 sm:pt-20">{children}</main>
         <Footer />
+        <ChatWidget />
       </body>
     </html>
   );
