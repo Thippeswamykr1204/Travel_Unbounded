@@ -10,6 +10,7 @@ export interface EnquiryDocument extends Document {
   hotelCategory: "Standard" | "Deluxe" | "Luxury";
   numberOfChildren: number;
   destination?: string;
+  chatSessionId?: string;
   status: "new" | "contacted" | "converted" | "closed";
   createdAt: Date;
   updatedAt: Date;
@@ -30,6 +31,7 @@ export const enquirySchema = new Schema<EnquiryDocument>(
     },
     numberOfChildren: { type: Number, default: 0, min: 0 },
     destination: { type: String, required: false },
+    chatSessionId: { type: String, required: false },
     status: {
       type: String,
       enum: ["new", "contacted", "converted", "closed"],

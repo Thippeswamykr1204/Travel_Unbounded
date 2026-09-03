@@ -12,6 +12,9 @@ export const enquirySchema = z.object({
   hotelCategory: z.enum(["Standard", "Deluxe", "Luxury"]),
   numberOfChildren: z.coerce.number().int().min(0).default(0),
   destination: z.string().optional(),
+  // Tier 9: opaque client-generated chat session id, set only when the
+  // enquiry originated from "Enquire about this itinerary" in the chatbot.
+  chatSessionId: z.string().trim().min(1).max(100).optional(),
   companyWebsite: z.string().max(0, "").optional(), // honeypot — must stay empty
 });
 
@@ -104,3 +107,26 @@ export const itinerarySchema = z.object({
 });
 
 export type ItineraryValues = z.infer<typeof itinerarySchema>;
+
+// --- Chat persistence (Tier 9) ---
+
+export const chatSessionIdSchema = z
+  .string()
+  .trim()
+  .min(1, "sessionId is required")
+  .max(100, "sessionId is too long");
+
+export const chatSessionSaveSchema = z.object({
+  sessionId: chatSessionIdSchema,
+  messages: chatRequestSchema.shape.messages,
+  itinerary: itinerarySchema.optional(),
+});
+
+export type ChatSessionSaveValues = z.infer<typeof chatSessionSaveSchema>;
+
+export const adminChatSessionQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
+
+export type AdminChatSessionQuery = z.infer<typeof adminChatSessionQuerySchema>;

@@ -9,6 +9,7 @@ import { generateItineraryPdf } from "@/lib/generateItineraryPdf";
 
 interface ItineraryDisplayProps {
   itinerary: Itinerary;
+  sessionId?: string;
 }
 
 function buildPlainTextItinerary(itinerary: Itinerary): string {
@@ -54,7 +55,7 @@ function slugify(value: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-export default function ItineraryDisplay({ itinerary }: ItineraryDisplayProps) {
+export default function ItineraryDisplay({ itinerary, sessionId }: ItineraryDisplayProps) {
   const router = useRouter();
   const [openDays, setOpenDays] = useState<Set<number>>(
     () => new Set(itinerary.days.length > 0 ? [itinerary.days[0]!.day] : []),
@@ -84,6 +85,9 @@ export default function ItineraryDisplay({ itinerary }: ItineraryDisplayProps) {
 
   const handleEnquire = () => {
     const params = new URLSearchParams({ destination: itinerary.destination });
+    if (sessionId) {
+      params.set("chatSessionId", sessionId);
+    }
     router.push(`/contact?${params.toString()}`);
   };
 

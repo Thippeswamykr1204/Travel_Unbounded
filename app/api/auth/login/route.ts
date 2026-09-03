@@ -14,7 +14,7 @@ import { generateRefreshToken, hashRefreshToken } from "@/lib/refreshToken";
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
 
-const loginAttemptBuckets = new Map
+const loginAttemptBuckets = new Map<
   string,
   { count: number; resetAt: number }
 >();

@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { getEnquiryModel } from "@/models/Enquiry";
 import { getDestinationModel } from "@/models/Destination";
 import { getAdminAuditLogModel } from "@/models/AdminAuditLog";
+import { getChatConversationModel } from "@/models/ChatConversation";
 import { getAnalyticsSummary } from "@/lib/analytics";
 import MonthlyVolumeChart from "@/components/admin/analytics/MonthlyVolumeChart";
 import StatusBreakdownChart from "@/components/admin/analytics/StatusBreakdownChart";
@@ -14,14 +15,16 @@ export default async function AdminDashboardPage() {
   const Enquiry = getEnquiryModel();
   const Destination = getDestinationModel();
   const AdminAuditLog = getAdminAuditLogModel();
+  const ChatConversation = getChatConversationModel();
 
-  const [total, newCount, activeDestinations, analytics, recentActivity] =
+  const [total, newCount, activeDestinations, analytics, recentActivity, aiItinerariesGenerated] =
     await Promise.all([
       Enquiry.countDocuments({}),
       Enquiry.countDocuments({ status: "new" }),
       Destination.countDocuments({ active: true }),
       getAnalyticsSummary(6),
       AdminAuditLog.find({}).sort({ createdAt: -1 }).limit(10).lean(),
+      ChatConversation.countDocuments({ itinerary: { $ne: null } }),
     ]);
 
   return (
@@ -31,7 +34,7 @@ export default async function AdminDashboardPage() {
         A quick snapshot of enquiries coming in.
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="rounded-lg border border-ink/10 bg-paper p-6 shadow-sm">
           <p className="font-sans text-sm text-ink/60">Total Enquiries</p>
           <p className="mt-2 font-display text-4xl text-ink">{total}</p>
@@ -48,6 +51,12 @@ export default async function AdminDashboardPage() {
           <p className="font-sans text-sm text-ink/60">Conversion Rate</p>
           <p className="mt-2 font-display text-4xl text-horizon">
             {analytics.conversionRate.toFixed(1)}%
+          </p>
+        </div>
+        <div className="rounded-lg border border-ink/10 bg-paper p-6 shadow-sm">
+          <p className="font-sans text-sm text-ink/60">AI Itineraries Generated</p>
+          <p className="mt-2 font-display text-4xl text-ink">
+            {aiItinerariesGenerated}
           </p>
         </div>
       </div>

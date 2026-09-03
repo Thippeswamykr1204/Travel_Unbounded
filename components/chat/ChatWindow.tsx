@@ -15,8 +15,16 @@ const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export default function ChatWindow({ onClose }: ChatWindowProps) {
-  const { messages, isTyping, itinerary, itineraryMessageIndex, error, sendMessage, reset } =
-    useChatConversation();
+  const {
+    messages,
+    isTyping,
+    itinerary,
+    itineraryMessageIndex,
+    error,
+    sessionId,
+    sendMessage,
+    reset,
+  } = useChatConversation();
   const [inputValue, setInputValue] = useState("");
 
   const panelRef = useRef<HTMLDivElement>(null);
@@ -154,7 +162,10 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
               </div>
 
               {showItineraryHere && (
-                <ItineraryDisplay itinerary={itinerary} />
+                <ItineraryDisplay
+                  itinerary={itinerary}
+                  sessionId={sessionId ?? undefined}
+                />
               )}
             </div>
           );

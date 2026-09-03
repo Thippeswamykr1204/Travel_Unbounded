@@ -7,13 +7,14 @@ import { cn } from "@/lib/utils";
 
 type AdminShellProps = {
   children: ReactNode;
-  activeNav: "dashboard" | "enquiries" | "destinations";
+  activeNav: "dashboard" | "enquiries" | "destinations" | "ai-leads";
 };
 
 const NAV_ITEMS = [
   { key: "dashboard", href: "/admin/dashboard", label: "Dashboard" },
   { key: "enquiries", href: "/admin/enquiries", label: "Enquiries" },
   { key: "destinations", href: "/admin/destinations", label: "Destinations" },
+  { key: "ai-leads", href: "/admin/ai-leads", label: "AI Leads" },
 ] as const;
 
 export default function AdminShell({ children, activeNav }: AdminShellProps) {

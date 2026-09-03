@@ -9,11 +9,15 @@ export const metadata: Metadata = {
 };
 
 type ContactPageProps = {
-  searchParams: Promise<{ destination?: string; people?: string }>;
+  searchParams: Promise<{
+    destination?: string;
+    people?: string;
+    chatSessionId?: string;
+  }>;
 };
 
 export default async function Contact({ searchParams }: ContactPageProps) {
-  const { destination, people } = await searchParams;
+  const { destination, people, chatSessionId } = await searchParams;
 
   const parsedPeople = people ? Number.parseInt(people, 10) : NaN;
   const numberOfPeople =
@@ -35,7 +39,11 @@ export default async function Contact({ searchParams }: ContactPageProps) {
 
       <section className="py-14 sm:py-20">
         <Container className="max-w-2xl">
-          <BookingForm destination={destination} numberOfPeople={numberOfPeople} />
+          <BookingForm
+            destination={destination}
+            numberOfPeople={numberOfPeople}
+            chatSessionId={chatSessionId}
+          />
         </Container>
       </section>
     </main>

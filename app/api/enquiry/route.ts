@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { enquirySchema } from "@/lib/validations";
 import { connectDB } from "@/lib/mongodb";
 import { getEnquiryModel } from "@/models/Enquiry";
+import { getChatConversationModel } from "@/models/ChatConversation";
 import { checkRateLimit } from "@/lib/rateLimit";
 
 function getClientIp(request: NextRequest): string {
@@ -71,6 +72,22 @@ export async function POST(request: NextRequest) {
     const Enquiry = getEnquiryModel();
     // Mongoose ignores fields not declared on the schema (e.g. companyWebsite).
     const created = await Enquiry.create(parsed.data);
+
+    // Best-effort backlink: if this enquiry came from the chatbot's
+    // "Enquire about this itinerary" action, link the ChatConversation to
+    // the enquiry it produced. Never let this fail the enquiry creation —
+    // the enquiry itself is the important artifact, the backlink isn't.
+    if (parsed.data.chatSessionId) {
+      try {
+        const ChatConversation = getChatConversationModel();
+        await ChatConversation.findOneAndUpdate(
+          { sessionId: parsed.data.chatSessionId },
+          { $set: { enquiryId: created._id.toString() } },
+        );
+      } catch (err) {
+        console.error("Failed to link chat session to enquiry:", err);
+      }
+    }
 
     return NextResponse.json(
       {

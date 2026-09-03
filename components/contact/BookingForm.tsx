@@ -22,9 +22,14 @@ function tomorrowISODate() {
 type BookingFormProps = {
   destination?: string;
   numberOfPeople?: number;
+  chatSessionId?: string;
 };
 
-export default function BookingForm({ destination, numberOfPeople }: BookingFormProps) {
+export default function BookingForm({
+  destination,
+  numberOfPeople,
+  chatSessionId,
+}: BookingFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +52,7 @@ export default function BookingForm({ destination, numberOfPeople }: BookingForm
       numberOfChildren: 0,
       hotelCategory: undefined,
       destination: destination ?? "",
+      chatSessionId: chatSessionId ?? undefined,
       companyWebsite: "",
     },
   });
@@ -285,6 +291,13 @@ export default function BookingForm({ destination, numberOfPeople }: BookingForm
               {...register("destination")}
             />
           </div>
+        )}
+
+        {/* Chat session backlink — metadata only, never shown to the visitor.
+            Present only when the enquiry originated from the chatbot's
+            "Enquire about this itinerary" action. */}
+        {chatSessionId && (
+          <input type="hidden" {...register("chatSessionId")} />
         )}
 
         {/* Honeypot — visually hidden off-screen, still present for screen readers.
