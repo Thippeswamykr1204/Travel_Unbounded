@@ -8,6 +8,7 @@ import {
   JWT_COOKIE_NAME,
   REFRESH_COOKIE_NAME,
   REFRESH_TOKEN_TTL_MS,
+  shouldUseSecureCookies,
 } from "@/lib/auth";
 import { generateRefreshToken, hashRefreshToken } from "@/lib/refreshToken";
 
@@ -142,9 +143,11 @@ export async function POST(request: NextRequest) {
       data: { email: admin.email, name: admin.name },
     });
 
+    const secure = shouldUseSecureCookies(request);
+
     response.cookies.set(JWT_COOKIE_NAME, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure,
       sameSite: "lax",
       path: "/",
       maxAge: 15 * 60,
@@ -152,14 +155,18 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set(REFRESH_COOKIE_NAME, refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure,
       sameSite: "lax",
       path: "/api/auth",
       maxAge: Math.floor(REFRESH_TOKEN_TTL_MS / 1000),
     });
 
     return response;
-  } catch {
+  } catch (err) {
+    // Surface the real cause in the server console — common culprits are
+    // MONGODB_URI / JWT_SECRET missing from .env.local, or Mongo being
+    // unreachable. The client only ever sees a generic message.
+    console.error("[POST /api/auth/login]", err);
     return NextResponse.json(
       { success: false, message: "Something went wrong. Please try again." },
       { status: 500 },

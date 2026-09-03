@@ -7,22 +7,23 @@ import {
   JWT_COOKIE_NAME,
   REFRESH_COOKIE_NAME,
   REFRESH_TOKEN_TTL_MS,
+  shouldUseSecureCookies,
 } from "@/lib/auth";
 import { generateRefreshToken, hashRefreshToken } from "@/lib/refreshToken";
 
 const EXPIRED_MESSAGE = "Session expired, please log in again.";
 
-function clearAuthCookies(response: NextResponse) {
+function clearAuthCookies(response: NextResponse, secure: boolean) {
   response.cookies.set(JWT_COOKIE_NAME, "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure,
     sameSite: "lax",
     path: "/",
     maxAge: 0,
   });
   response.cookies.set(REFRESH_COOKIE_NAME, "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure,
     sameSite: "lax",
     path: "/api/auth",
     maxAge: 0,
@@ -30,6 +31,7 @@ function clearAuthCookies(response: NextResponse) {
 }
 
 export async function POST(request: NextRequest) {
+  const secure = shouldUseSecureCookies(request);
   try {
     const presentedToken = request.cookies.get(REFRESH_COOKIE_NAME)?.value;
 
@@ -74,7 +76,7 @@ export async function POST(request: NextRequest) {
         { success: false, message: EXPIRED_MESSAGE },
         { status: 401 },
       );
-      clearAuthCookies(response);
+      clearAuthCookies(response, secure);
       return response;
     }
 
@@ -94,7 +96,7 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set(JWT_COOKIE_NAME, newAccessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure,
       sameSite: "lax",
       path: "/",
       maxAge: 15 * 60,
@@ -102,7 +104,7 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set(REFRESH_COOKIE_NAME, newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure,
       sameSite: "lax",
       path: "/api/auth",
       maxAge: Math.floor(REFRESH_TOKEN_TTL_MS / 1000),
