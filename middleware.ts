@@ -38,4 +38,11 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: ["/admin/:path*", "/api/admin/:path*"],
+  // jsonwebtoken uses Node's crypto module (require calls) which the
+  // default Edge runtime does not support. Without this, jwt.verify()
+  // throws inside verifyAdminToken -> isAuthenticated is always false ->
+  // every request to /admin/dashboard bounces back to /admin/login, and
+  // the underlying "crypto module not supported" error surfaces
+  // intermittently depending on caching.
+  runtime: "nodejs",
 };
