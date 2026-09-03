@@ -1,4 +1,10 @@
-import "dotenv/config";
+// dotenv/config only loads a file literally named ".env" by default — this
+// project only has ".env.local" (the file Next.js's own dev server loads
+// automatically). Point dotenv at it explicitly so this standalone script
+// sees the same env vars `npm run dev` does.
+import { config } from "dotenv";
+config({ path: ".env.local" });
+
 import { connectDB } from "../lib/mongodb";
 import { getDestinationModel } from "../models/Destination";
 import { destinations } from "../data/destinations";

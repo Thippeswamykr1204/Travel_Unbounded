@@ -89,6 +89,18 @@ npm run build          # production build
 npx tsc --noEmit        # type-check without emitting output
 ```
 
+### E2E Tests
+
+```bash
+npm run test:e2e       # Playwright smoke tests (chromium)
+```
+
+Runs against a local dev server (started automatically). The admin login test needs
+`ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD` set in the environment running the tests —
+without them it skips with a clear message rather than failing. Not covered: the AI
+chatbot flow (requires a live `GEMINI_API_KEY` and calls to Google's API, which would
+make the suite flaky/slow/costly in CI).
+
 > **Note:** several test files use `mongodb-memory-server`, which downloads a MongoDB
 > binary on first run. This requires network access the first time the suite runs
 > (subsequent runs use the cached binary).

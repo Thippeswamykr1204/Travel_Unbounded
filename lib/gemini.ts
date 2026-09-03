@@ -37,7 +37,7 @@ Every single response, in every phase of the conversation, must be exactly one o
 function pickModelId(): string {
   // gemini-2.0-flash is the current stable fast/free-tier model for this SDK
   // version; gemini-1.5-flash is kept as a documented fallback only.
-  return "gemini-2.0-flash";
+  return "gemini-3.6-flash";
 }
 
 export function getGeminiModel(): GenerativeModel {
