@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AdminShell from "@/components/admin/AdminShell";
@@ -23,7 +23,10 @@ export default function AdminDestinationsPage() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const fetchIdRef = useRef(0);
+
   const loadDestinations = async () => {
+    const requestId = ++fetchIdRef.current;
     setLoading(true);
     setError(null);
     try {
@@ -32,6 +35,8 @@ export default function AdminDestinationsPage() {
       });
       const body = await response.json().catch(() => null);
 
+      if (requestId !== fetchIdRef.current) return;
+
       if (!response.ok || !body?.success) {
         setError(body?.message ?? "Failed to load destinations.");
         return;
@@ -39,9 +44,10 @@ export default function AdminDestinationsPage() {
 
       setDestinations(body.data);
     } catch {
+      if (requestId !== fetchIdRef.current) return;
       setError("Failed to load destinations.");
     } finally {
-      setLoading(false);
+      if (requestId === fetchIdRef.current) setLoading(false);
     }
   };
 

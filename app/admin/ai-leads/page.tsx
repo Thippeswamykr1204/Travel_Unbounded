@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import { cn } from "@/lib/utils";
 import type { ChatMessage, Itinerary } from "@/types/chat";
@@ -53,7 +53,10 @@ export default function AiLeadsPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState<string | null>(null);
 
+  const fetchIdRef = useRef(0);
+
   const loadSessions = useCallback(async () => {
+    const requestId = ++fetchIdRef.current;
     setLoading(true);
     setError(null);
 
@@ -67,6 +70,8 @@ export default function AiLeadsPage() {
       });
       const body = await response.json().catch(() => null);
 
+      if (requestId !== fetchIdRef.current) return;
+
       if (!response.ok || !body?.success) {
         setError(body?.message ?? "Failed to load AI leads.");
         setState(EMPTY_STATE);
@@ -75,10 +80,11 @@ export default function AiLeadsPage() {
 
       setState(body.data);
     } catch {
+      if (requestId !== fetchIdRef.current) return;
       setError("Failed to load AI leads.");
       setState(EMPTY_STATE);
     } finally {
-      setLoading(false);
+      if (requestId === fetchIdRef.current) setLoading(false);
     }
   }, [page]);
 

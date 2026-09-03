@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatMessage, Itinerary } from "@/types/chat";
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 
 const SEED_MESSAGE: ChatMessage = {
   role: "assistant",
@@ -33,11 +34,15 @@ export function useChatConversation(): UseChatConversationResult {
   const [messages, setMessages] = useState<ChatMessage[]>([SEED_MESSAGE]);
   const [isTyping, setIsTyping] = useState(false);
   const [itinerary, setItinerary] = useState<Itinerary | null>(null);
-  const [itineraryMessageIndex, setItineraryMessageIndex] = useState
-      number | null
-    >(null);
+  const [itineraryMessageIndex, setItineraryMessageIndex] = useState<
+    number | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+
+  // Tracks the in-flight /api/chat request so a new send (or a reset) can
+  // abort a stale one before it resolves and clobbers newer state.
+  const inFlightControllerRef = useRef<AbortController | null>(null);
 
   // On first mount, resume an existing browser session (sessionStorage) or
   // mint a new one. sessionStorage (not localStorage) so it's scoped to the
@@ -125,6 +130,15 @@ export function useChatConversation(): UseChatConversationResult {
       const trimmed = content.trim();
       if (!trimmed) return;
 
+      // A previous send is still in flight (double-click, quick correction,
+      // etc.) — cancel it so its eventual response can't win a race against
+      // this newer one.
+      if (inFlightControllerRef.current) {
+        inFlightControllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      inFlightControllerRef.current = controller;
+
       const userMessage: ChatMessage = { role: "user", content: trimmed };
       const nextMessages = [...messages, userMessage];
 
@@ -133,10 +147,11 @@ export function useChatConversation(): UseChatConversationResult {
       setIsTyping(true);
 
       try {
-        const response = await fetch("/api/chat", {
+        const response = await fetchWithRetry("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ messages: nextMessages }),
+          signal: controller.signal,
         });
 
         const result = await response.json().catch(() => null);
@@ -169,16 +184,39 @@ export function useChatConversation(): UseChatConversationResult {
         if (sessionId) {
           persistSession(sessionId, finalMessages, finalItinerary);
         }
-      } catch {
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          // Intentionally cancelled (superseded by a newer send, or reset)
+          // — not a real failure, so stay silent.
+          return;
+        }
         setError(NETWORK_ERROR_MESSAGE);
       } finally {
-        setIsTyping(false);
+        // Only this call's own finally block should touch shared state —
+        // an older, aborted call's finally must not stomp on isTyping (or
+        // the controller ref) while a NEWER call is still genuinely in
+        // flight. Guard both by checking this call's controller is still
+        // the current one before touching either.
+        if (inFlightControllerRef.current === controller) {
+          inFlightControllerRef.current = null;
+          setIsTyping(false);
+        }
       }
     },
     [messages, itinerary, sessionId, persistSession],
   );
 
   const reset = useCallback(() => {
+    if (inFlightControllerRef.current) {
+      inFlightControllerRef.current.abort();
+      inFlightControllerRef.current = null;
+      // reset() takes ownership of clearing the ref itself (above), which
+      // means the aborted call's own finally block will no longer see its
+      // controller as "current" and won't touch isTyping — so reset() must
+      // clear it here instead, or it could be left stuck at true.
+      setIsTyping(false);
+    }
+
     setMessages([SEED_MESSAGE]);
     setItinerary(null);
     setItineraryMessageIndex(null);
